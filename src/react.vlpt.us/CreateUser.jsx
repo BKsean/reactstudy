@@ -1,6 +1,42 @@
-import React from 'react';
+import React, {useContext, useRef, useCallback} from 'react';
+import useInputs from "./hooks/useInputs";
+import {UserDispatch} from "./App";
 
-const CreateUser = ({ username, email, onChange, onCreate }) => {
+const CreateUser = () => {
+
+    const [{ username, email }, onChange, reset] = useInputs({
+        username: "",
+        email: ""
+    });
+    const nextId = useRef(4);
+    const dispatch = useContext(UserDispatch);
+
+    const onCreate = () => {
+        dispatch({
+            type: 'CREATE_USER',
+            user: {
+                id: nextId.current,
+                username,
+                email
+            }
+        });
+        reset();
+        nextId.current += 1;
+    };
+
+    const onCreate2 = useCallback(() => {
+        dispatch({
+            type: "CREATE_USER",
+            user: {
+                id: nextId.current,
+                username,
+                email
+            }
+        });
+        reset();
+        nextId.current += 1;
+    }, [username, email, reset]);
+
     return (
         <div>
             <input
@@ -15,7 +51,7 @@ const CreateUser = ({ username, email, onChange, onCreate }) => {
                 onChange={onChange}
                 value={email}
             />
-            <button onClick={onCreate}>등록</button>
+            <button onClick={onCreate2}>등록</button>
         </div>
     );
 };

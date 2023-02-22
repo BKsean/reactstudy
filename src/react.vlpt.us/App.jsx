@@ -2,7 +2,7 @@ import React, { useRef, useReducer, useMemo, useCallback } from "react";
 import UserList from "./UserList";
 import CreateUser from "./CreateUser";
 import useInputs from "./hooks/useInputs";
-
+import produce, {castDraft} from "immer";
 function countActiveUsers(users) {
     console.log("활성 사용자 수를 세는중...");
     return users.filter(user => user.active).length;
@@ -34,16 +34,23 @@ const initialState = {
 function reducer(state, action) {
     switch (action.type) {
         case "CREATE_USER":
-            return {
+            return produce(state,draft  =>{
+                draft.users.push(action.user);
+            })
+            /*return {
                 users: state.users.concat(action.user)
-            };
+            };*/
         case "TOGGLE_USER":
-            return {
+            return produce(state,draft =>{
+                const user = draft.users.find(user=> user.id === action.id);
+                user.active = !user.active;
+            });
+            /*return {
                 ...state,
                 users: state.users.map(user =>
                     user.id === action.id ? { ...user, active: !user.active } : user
                 )
-            };
+            };*/
         case "REMOVE_USER":
             return {
                 ...state,
@@ -54,17 +61,23 @@ function reducer(state, action) {
     }
 }
 
+// UserDispatch 라는 이름으로 내보내줍니다.
+export const UserDispatch = React.createContext(null);
+
 function App() {
-    const [{ username, email }, onChange, reset] = useInputs({
+    //CreateUser.jsx로 이동
+    /*const [{ username, email }, onChange, reset] = useInputs({
         username: "",
         email: ""
-    });
+    });*/
     const [state, dispatch] = useReducer(reducer, initialState);
-    const nextId = useRef(4);
+    //CreateUser.jsx로 이동
+    //const nextId = useRef(4);
 
     const { users } = state;
     // const { username, email } = state.inputs;
-    const onCreate = useCallback(() => {
+
+/*    const onCreate = useCallback(() => {
         dispatch({
             type: "CREATE_USER",
             user: {
@@ -75,9 +88,10 @@ function App() {
         });
         reset();
         nextId.current += 1;
-    }, [username, email, reset]);
+    }, [username, email, reset]);*/
 
-    const onToggle = useCallback(id => {
+//Context API로 이제 계층적으로 전달할 필요가 없다
+/*    const onToggle = useCallback(id => {
         dispatch({
             type: "TOGGLE_USER",
             id
@@ -89,20 +103,20 @@ function App() {
             type: "REMOVE_USER",
             id
         });
-    }, []);
+    }, []);*/
 
     const count = useMemo(() => countActiveUsers(users), [users]);
     return (
-        <>
+        <UserDispatch.Provider value={dispatch}>
             <CreateUser
-                username={username}
+                /*username={username}
                 email={email}
                 onChange={onChange}
-                onCreate={onCreate}
+                onCreate={onCreate}*/
             />
-            <UserList users={users} onToggle={onToggle} onRemove={onRemove} />
+            <UserList users={users} />
             <div>활성사용자 수 : {count}</div>
-        </>
+        </UserDispatch.Provider>
     );
 }
 
