@@ -22,5 +22,31 @@ $ yarn add immer
 
 import produce from 'immer';
 그리고 produce 함수를 사용 할 때에는 첫번째 파라미터에는 수정하고 싶은 상태, 두번째 파라미터에는 어떻게 업데이트하고 싶을지 정의하는 함수를 넣어줍니다.
-
 두번째 파라미터에 넣는 함수에서는 불변성에 대해서 신경쓰지 않고 그냥 업데이트 해주면 다 알아서 해줍니다.
+const state = {
+  number: 1,
+  dontChangeMe: 2
+};
+
+const nextState = produce(state, draft => {
+  draft.number += 1;
+});
+
+console.log(nextState);
+// { number: 2, dontChangeMe: 2 }
+
+immer을 함수로 만들어 사용하려면 첫번째 파라미터를 생략한다.
+const todo = {
+  text: 'Hello',
+  done: false
+};
+
+const updater = produce(draft => {
+  draft.done = !draft.done;
+});
+
+const nextTodo = updater(todo);
+
+console.log(nextTodo);
+// { text: 'Hello', done: true }
+
