@@ -1,13 +1,13 @@
 import React, {useContext} from 'react';
 import {UserDispatch} from "./App";
-import styles from './component/style.module.css';
+
 const User = React.memo(function User({user}) {
 
     const dispatch = useContext(UserDispatch);
 
     return (
         <div>
-            <b className={styles['size-30']}
+            <b
                 style={{
                     cursor: 'pointer',
                     color: user.active ? 'green' : 'black'
