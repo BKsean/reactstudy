@@ -12,10 +12,15 @@ import './index.css';
 // import Calculator from "./chapter12/Calculator";
 // import ProfileCard from "./chapter13/ProfileCard";
 import App from './react.vlpt.us/App';
+import DarkOrLight from "./chapter14/DarkOrLight";
+import Blocks from "./chapter15/Blocks";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-    <App/>
+    <Blocks/>
+    // <DarkOrLight/>
+
+    // <App/>
   );
 
 // If you want to start measuring performance in your app, pass a function
