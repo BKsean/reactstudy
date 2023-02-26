@@ -3,6 +3,7 @@ import UserList from "./UserList";
 import CreateUser from "./CreateUser";
 import useInputs from "./hooks/useInputs";
 import produce, {castDraft} from "immer";
+import styles from './component/style.module.css';
 function countActiveUsers(users) {
     console.log("활성 사용자 수를 세는중...");
     return users.filter(user => user.active).length;
@@ -115,7 +116,7 @@ function App() {
                 onCreate={onCreate}*/
             />
             <UserList users={users} />
-            <div>활성사용자 수 : {count}</div>
+            <div className={styles.size30}>활성사용자 수 : {count}</div>
         </UserDispatch.Provider>
     );
 }
